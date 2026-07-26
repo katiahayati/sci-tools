@@ -63,6 +63,29 @@ namespace SCI.Decompile
             }
             sb.Append("],");
 
+            // EXPORT TABLE. `(ScriptID <script> <n>)` names a script's Nth export, which is how
+            // SCI reaches a singleton (a region, a cutscene Script) from another script. The
+            // index is into THIS table and does NOT match the object order, so without it a
+            // consumer cannot resolve the reference at all. Only Object exports are useful to
+            // name; code exports are emitted as null to keep the indexes aligned.
+            Key(sb, "exports"); sb.Append('[');
+            for (int i = 0; i < script.Exports.Count; i++)
+            {
+                if (i > 0) sb.Append(',');
+                var ex = script.Exports[i];
+                RObject target = null;
+                if (ex.Type == ExportType.Object)
+                {
+                    foreach (var o in script.Objects)
+                    {
+                        if (o.Position == ex.Value) { target = o; break; }
+                    }
+                }
+                if (target == null) sb.Append("null");
+                else Str(sb, target.Name);
+            }
+            sb.Append("],");
+
             Key(sb, "procedures"); sb.Append('[');
             bool first = true;
             foreach (var proc in script.Procedures)
