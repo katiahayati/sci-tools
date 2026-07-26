@@ -21,6 +21,7 @@ namespace SCI.Decompile
 
         public bool CreateGameIni = false;
         public bool CreateScoFiles = false;
+        public bool EmitJson = false;          // write a <game>.ir.json AST/IR dump
         public string ScriptSubDirectory = "src";
 
         // Statistics
@@ -263,6 +264,10 @@ namespace SCI.Decompile
             if (CreateGameIni)
             {
                 GameIniWriter.Write(game, symbols, outputDirectory);
+            }
+            if (EmitJson)
+            {
+                JsonExport.Run(game, scripts, Path.Combine(outputDirectory, game.Name + ".ir.json"));
             }
         }
 

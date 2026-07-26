@@ -22,6 +22,9 @@ namespace Snuffer
         [Option('o', "sco")]
         public bool Sco { get; set; }
 
+        [Option("json")]
+        public bool Json { get; set; }
+
         [Option('j', "jobs", Default = 1)]
         public int Jobs { get; set; }
 

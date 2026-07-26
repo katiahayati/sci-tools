@@ -70,6 +70,7 @@ namespace Snuffer
                     decompiler.CatchExceptions = true;
                     decompiler.CreateGameIni = (opt.Decompile && opt.Sco);
                     decompiler.CreateScoFiles = (opt.Decompile && opt.Sco);
+                    decompiler.EmitJson = (opt.Decompile && opt.Json);
                     decompiler.DumpGraphs = opt.Graph;
 
                     string outputDirectory = Path.Combine(opt.OutputDirectory, gameDirectory.Name);
@@ -95,6 +96,7 @@ namespace Snuffer
                 decompiler.CatchExceptions = true;
                 decompiler.CreateGameIni = (opt.Decompile && opt.Sco);
                 decompiler.CreateScoFiles = (opt.Decompile && opt.Sco);
+                decompiler.EmitJson = (opt.Decompile && opt.Json);
                 decompiler.DumpGraphs = opt.Graph;
                 var localizationMap = ReadLocalizationMap(inputDirectory.Parent);
                 if (ProcessDirectory(new DirectoryInfo(opt.InputDirectory), new DirectoryInfo(opt.OutputDirectory), opt, decompiler, localizationMap))
