@@ -20,7 +20,7 @@ namespace SCI.Decompile
 {
     static class JsonExport
     {
-        public static void Run(Game game, List<ScriptSummary> scripts, string path)
+        public static void Run(Game game, List<ScriptSummary> scripts, Symbols symbols, string path)
         {
             var sb = new StringBuilder(1 << 20);
             sb.Append('{');
@@ -32,14 +32,14 @@ namespace SCI.Decompile
             sb.Append("],");
 
             Key(sb, "scripts"); sb.Append('[');
-            for (int i = 0; i < scripts.Count; i++) { if (i > 0) sb.Append(','); EmitScript(sb, scripts[i]); }
+            for (int i = 0; i < scripts.Count; i++) { if (i > 0) sb.Append(','); EmitScript(sb, scripts[i], symbols); }
             sb.Append(']');
 
             sb.Append('}');
             File.WriteAllText(path, sb.ToString());
         }
 
-        static void EmitScript(StringBuilder sb, ScriptSummary ss)
+        static void EmitScript(StringBuilder sb, ScriptSummary ss, Symbols symbols)
         {
             var script = ss.Script;
             sb.Append('{');
@@ -59,7 +59,7 @@ namespace SCI.Decompile
             for (int i = 0; i < script.Objects.Count; i++)
             {
                 if (i > 0) sb.Append(',');
-                EmitObject(sb, ss, script.Objects[i]);
+                EmitObject(sb, ss, script.Objects[i], symbols);
             }
             sb.Append("],");
 
@@ -101,10 +101,11 @@ namespace SCI.Decompile
             sb.Append('}');
         }
 
-        static void EmitObject(StringBuilder sb, ScriptSummary ss, RObject obj)
+        static void EmitObject(StringBuilder sb, ScriptSummary ss, RObject obj, Symbols symbols)
         {
             sb.Append('{');
             Key(sb, "name"); Str(sb, obj.Name); sb.Append(',');
+            Key(sb, "symbol"); Str(sb, symbols.Object(obj)); sb.Append(',');
             Key(sb, "isClass"); sb.Append(obj.IsClass ? "true" : "false"); sb.Append(',');
             Key(sb, "species"); sb.Append(obj.Species); sb.Append(',');
             Key(sb, "super"); sb.Append(obj.SuperClass); sb.Append(',');

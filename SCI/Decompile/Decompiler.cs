@@ -267,7 +267,7 @@ namespace SCI.Decompile
             }
             if (EmitJson)
             {
-                JsonExport.Run(game, scripts, Path.Combine(outputDirectory, game.Name + ".ir.json"));
+                JsonExport.Run(game, scripts, symbols, Path.Combine(outputDirectory, game.Name + ".ir.json"));
             }
         }
 
