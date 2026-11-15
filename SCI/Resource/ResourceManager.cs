@@ -148,7 +148,17 @@ namespace SCI.Resource
 
             // always apply patch files, even if there are no volumes.
             // root directory has higher priority than patches directory.
-            AddPatchFiles(Path.Combine(Directory, "patches"));
+            // the patches directory is matched WITHOUT regard to case: Sierra's CDs (and the
+            // GOG repacks of them) spell it PATCHES, and on a case-sensitive file system a
+            // literal "patches" silently finds nothing -- every script Sierra patched is then
+            // read from the volume instead, i.e. not the code the game runs.
+            foreach (var sub in System.IO.Directory.GetDirectories(Directory))
+            {
+                if (string.Equals(Path.GetFileName(sub), "patches", StringComparison.OrdinalIgnoreCase))
+                {
+                    AddPatchFiles(sub);
+                }
+            }
             AddPatchFiles(Directory);
 
             AddChunks();
